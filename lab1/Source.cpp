@@ -28,11 +28,11 @@ int main(int argc, char** argv) {
 			file.get();
 		}
 
-		// расшарили переменную numOfChar
-		MPI_Bcast(&numOfChar, 1, MPI_LONG, 0, MPI_COMM_WORLD);
-
 		file.close();
 	}
+
+	// расшарили переменную numOfChar
+	MPI_Bcast(&numOfChar, 1, MPI_LONG, 0, MPI_COMM_WORLD);
 
 	// выделили память в каждом процессе
 	arr = new char[numOfChar];
@@ -50,17 +50,8 @@ int main(int argc, char** argv) {
 		cout << "num - " << numOfChar << "\n";
 	}
 
-	// синхронизировали все процессы
-	MPI_Barrier(MPI_COMM_WORLD);
-
-	if (ProcRank == 0)
-		cout << "do\n";
-
 	// расшарили массив
 	MPI_Bcast(arr, numOfChar, MPI_CHAR, 0, MPI_COMM_WORLD);
-
-	if (ProcRank == 0)
-		cout << "posle\n";
 
 	if (ProcRank == 0)
 		start = MPI_Wtime();
@@ -85,7 +76,7 @@ int main(int argc, char** argv) {
 		stop = MPI_Wtime();
 		double result = (double)sum / (double)numOfChar * 100;
 
-		cout << "Result: " << result << " %\n"
+		cout << "Result: " << std::fixed << result << " %\n"
 			<< "time - " << stop - start << " sec\n";
 	}
 
