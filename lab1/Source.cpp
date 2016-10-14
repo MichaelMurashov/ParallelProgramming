@@ -1,9 +1,40 @@
 #include <iostream>
+//#include <string>
 #include <fstream>
 #include "mpi.h"
 
 using std::ifstream;
 using std::cout;
+using std::string;
+
+void userMenu(const char* appname, const char* message) {
+	cout << message << "\n"
+		<< "Please, provide arguments in the following format:\n\n"
+
+		<< "$ <name of programm> <symbol you want to find> <name of file>\n\n";
+}
+
+bool checkArguments(int argc, char** argv) {
+	if (argc != 3) {
+		userMenu(argv[0], "Wrong number of arguments!");
+		return false;
+
+	} else {
+		if (argv[1][1] != 0) {
+			userMenu(argv[0], "You must enter only one symbol!");
+			return false;
+
+		} else {
+			ifstream checkFile(argv[2]);
+			if (!checkFile.is_open()) {
+				userMenu(argv[0], "Wrong name of file!");
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
 
 int main(int argc, char** argv) {
 	int ProcNum, ProcRank;
@@ -12,17 +43,20 @@ int main(int argc, char** argv) {
 	MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
 	MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
 
-	int sum = 0, numOfChar = 0;;
+	if (ProcRank == 0) {
+		if (!checkArguments(argc, argv))
+			exit(1);
+	}
+
+	unsigned int sum = 0, numOfChar = 0;;
 	char symbol = argv[1][0];
 	char* arr;
 
 	double start, stop;
 
-	// работаем в нулевом главном процессе
 	if (ProcRank == 0) {
 		ifstream file(argv[2]);
 		
-		// подсчитали символы
 		while (!file.eof()) {
 			numOfChar++;
 			file.get();
@@ -31,26 +65,26 @@ int main(int argc, char** argv) {
 		file.close();
 	}
 
-	// расшарили переменную numOfChar
-	MPI_Bcast(&numOfChar, 1, MPI_LONG, 0, MPI_COMM_WORLD);
+	MPI_Bcast(&numOfChar, 1, MPI_UNSIGNED, 0, MPI_COMM_WORLD);
 
-	// выделили память в каждом процессе
 	arr = new char[numOfChar];
 
-	// снова работаем в главном процессе
 	if (ProcRank == 0) {
 		ifstream file(argv[2]);
 
-		// заполнили память
-		for (int i = 0; i < numOfChar; i++)
+		string 
+		cout << "Wait";
+
+		for (int i = 0; i < numOfChar; i++) {
+			if ()
 			arr[i] = file.get();
+		}
 
 		file.close();
 
-		cout << "num - " << numOfChar << "\n";
+		cout << "number of char - " << numOfChar << "\n";
 	}
 
-	// расшарили массив
 	MPI_Bcast(arr, numOfChar, MPI_CHAR, 0, MPI_COMM_WORLD);
 
 	if (ProcRank == 0)
@@ -77,7 +111,7 @@ int main(int argc, char** argv) {
 		double result = (double)sum / (double)numOfChar * 100;
 
 		cout << "Result: " << std::fixed << result << " %\n"
-			<< "time - " << stop - start << " sec\n";
+			<< "Time - " << stop - start << " sec\n";
 	}
 
 	MPI_Finalize();
