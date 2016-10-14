@@ -1,6 +1,7 @@
 #include <iostream>
-//#include <string>
+#include <string>
 #include <fstream>
+#include <cstdlib>
 #include "mpi.h"
 
 using std::ifstream;
@@ -54,10 +55,24 @@ int main(int argc, char** argv) {
 
 	double start, stop;
 
+	string wait = "Wait";
+
 	if (ProcRank == 0) {
 		ifstream file(argv[2]);
 		
+		cout << wait;
+		int i = 0;
+
 		while (!file.eof()) {
+			if (i++ % 1000000 == 0)
+				if (wait.length() == 7) {
+					wait = "Wait";
+				} else {
+					system("cls");
+					wait += ".";
+					cout << wait;
+				}
+
 			numOfChar++;
 			file.get();
 		}
@@ -72,16 +87,22 @@ int main(int argc, char** argv) {
 	if (ProcRank == 0) {
 		ifstream file(argv[2]);
 
-		string 
-		cout << "Wait";
-
 		for (int i = 0; i < numOfChar; i++) {
-			if ()
+			if (i % 1000000 == 0)
+				if (wait.length() == 7) { 
+					wait = "Wait";
+				} else {
+					system("cls");
+					wait += ".";
+					cout << wait;
+				}
+
 			arr[i] = file.get();
 		}
 
 		file.close();
 
+		system("cls");
 		cout << "number of char - " << numOfChar << "\n";
 	}
 
@@ -111,7 +132,7 @@ int main(int argc, char** argv) {
 		double result = (double)sum / (double)numOfChar * 100;
 
 		cout << "Result: " << std::fixed << result << " %\n"
-			<< "Time - " << stop - start << " sec\n";
+			<< "Time for search- " << stop - start << " sec\n";
 	}
 
 	MPI_Finalize();
