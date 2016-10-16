@@ -1,7 +1,6 @@
 #include <iostream>
-#include <string>
 #include <fstream>
-#include <cstdlib>
+#include <iomanip>
 #include "mpi.h"
 
 using std::ifstream;
@@ -106,8 +105,8 @@ int main(int argc, char** argv) {
 		stop = MPI_Wtime();
 		double result = (double)sum / (double)numOfChar * 100;
 
-		cout << "Result: " << std::fixed << result << " %\n"
-			<< "Time for search - " << stop - start << " sec\n";
+		cout << "Result: " << std::fixed << std::setprecision(2) << result << " %\n"
+			<< "Time for search - " << std::fixed << std::setprecision(3) <<  stop - start << " sec\n";
 	}
 
 	MPI_Finalize();
