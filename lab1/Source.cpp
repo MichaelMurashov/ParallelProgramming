@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
 
 		file.close();
 
-		cout << "number of char - " << numOfChar << "\n";
+		cout << "Number of char - " << numOfChar << "\n";
 	}
 
 	MPI_Bcast(arr, numOfChar, MPI_CHAR, 0, MPI_COMM_WORLD);
