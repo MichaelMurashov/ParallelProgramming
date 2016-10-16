@@ -38,13 +38,13 @@ bool checkArguments(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-	int ProcNum, ProcRank;
+	int procNum, procRank;
 
 	MPI_Init(&argc, &argv);
-	MPI_Comm_size(MPI_COMM_WORLD, &ProcNum);
-	MPI_Comm_rank(MPI_COMM_WORLD, &ProcRank);
+	MPI_Comm_size(MPI_COMM_WORLD, &procNum);
+	MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
 
-	if (ProcRank == 0) {
+	if (procRank == 0) {
 		if (!checkArguments(argc, argv))
 			exit(1);
 	}
@@ -55,24 +55,10 @@ int main(int argc, char** argv) {
 
 	double start, stop;
 
-	string wait = "Wait";
-
-	if (ProcRank == 0) {
+	if (procRank == 0) {
 		ifstream file(argv[2]);
-		
-		cout << wait;
-		int i = 0;
 
 		while (!file.eof()) {
-			if (i++ % 1000000 == 0)
-				if (wait.length() == 7) {
-					wait = "Wait";
-				} else {
-					system("cls");
-					wait += ".";
-					cout << wait;
-				}
-
 			numOfChar++;
 			file.get();
 		}
@@ -84,41 +70,30 @@ int main(int argc, char** argv) {
 
 	arr = new char[numOfChar];
 
-	if (ProcRank == 0) {
+	if (procRank == 0) {
 		ifstream file(argv[2]);
 
-		for (int i = 0; i < numOfChar; i++) {
-			if (i % 1000000 == 0)
-				if (wait.length() == 7) { 
-					wait = "Wait";
-				} else {
-					system("cls");
-					wait += ".";
-					cout << wait;
-				}
-
+		for (int i = 0; i < numOfChar; i++)
 			arr[i] = file.get();
-		}
 
 		file.close();
 
-		system("cls");
 		cout << "number of char - " << numOfChar << "\n";
 	}
 
 	MPI_Bcast(arr, numOfChar, MPI_CHAR, 0, MPI_COMM_WORLD);
 
-	if (ProcRank == 0)
+	if (procRank == 0)
 		start = MPI_Wtime();
 
 	int i1, i2;
-	int k = numOfChar / ProcNum;
+	int k = numOfChar / procNum;
 	int procCount = 0;
 
-	i1 = (int)(k * ProcRank);
-	i2 = (int)(k * (ProcRank + 1));
+	i1 = (int)(k * procRank);
+	i2 = (int)(k * (procRank + 1));
 
-	if (ProcRank == ProcNum - 1)
+	if (procRank == procNum - 1)
 		i2 = numOfChar;
 
 	for (int j = i1; j < i2; j++)
@@ -127,12 +102,12 @@ int main(int argc, char** argv) {
 
 	MPI_Reduce(&procCount, &sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 	
-	if (ProcRank == 0) {
+	if (procRank == 0) {
 		stop = MPI_Wtime();
 		double result = (double)sum / (double)numOfChar * 100;
 
 		cout << "Result: " << std::fixed << result << " %\n"
-			<< "Time for search- " << stop - start << " sec\n";
+			<< "Time for search - " << stop - start << " sec\n";
 	}
 
 	MPI_Finalize();
