@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
 
 		file.close();
 
-		cout << "Number of char - " << numOfChar << "\n";
+		cout << "Number of char: " << numOfChar << "\n";
 	}
 
 	MPI_Bcast(arr, numOfChar, MPI_CHAR, 0, MPI_COMM_WORLD);
@@ -105,8 +105,9 @@ int main(int argc, char** argv) {
 		stop = MPI_Wtime();
 		double result = (double)sum / (double)numOfChar * 100;
 
-		cout << "Result: " << std::fixed << std::setprecision(2) << result << " %\n"
-			<< "Time for search - " << std::fixed << std::setprecision(3) <<  stop - start << " sec\n";
+		cout << "Count: " << sum << "\n"
+			<< "Result: " << std::fixed << std::setprecision(2) << result << " %\n"
+			<< "Time for search: " << std::fixed << std::setprecision(3) <<  stop - start << " sec\n";
 	}
 
 	MPI_Finalize();
