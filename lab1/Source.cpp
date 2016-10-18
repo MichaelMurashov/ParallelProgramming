@@ -58,9 +58,11 @@ int main(int argc, char** argv) {
 		ifstream file(argv[2]);
 
 		while (!file.eof()) {
-			numOfChar++;
 			file.get();
+			numOfChar++;	
 		}
+
+		numOfChar--;
 
 		file.close();
 	}
@@ -74,6 +76,13 @@ int main(int argc, char** argv) {
 
 		for (int i = 0; i < numOfChar; i++)
 			arr[i] = file.get();
+		
+		if (numOfChar == 6) {
+			cout << "String: ";
+			for (int i = 0; i < numOfChar; i++)
+				cout << arr[i];
+			cout << "\n";
+		}
 
 		file.close();
 
@@ -107,7 +116,7 @@ int main(int argc, char** argv) {
 
 		cout << "Count: " << sum << "\n"
 			<< "Result: " << std::fixed << std::setprecision(2) << result << " %\n"
-			<< "Time for search: " << std::fixed << std::setprecision(3) <<  stop - start << " sec\n";
+			<< "Time for search: " <<  stop - start << " sec\n";
 	}
 
 	MPI_Finalize();
