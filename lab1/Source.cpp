@@ -115,8 +115,8 @@ int main(int argc, char** argv) {
 		double result = (double)sum / (double)numOfChar * 100;
 
 		cout << "Count: " << sum << "\n"
-			<< "Result: " << std::fixed << std::setprecision(2) << result << " %\n"
-			<< "Time for search: " <<  stop - start << " sec\n";
+			<< "Result: " << std::fixed << std::setprecision(2) << result << " %\n";
+		cout << "Time for search: " <<  stop - start << " sec\n";
 	}
 
 	MPI_Finalize();
