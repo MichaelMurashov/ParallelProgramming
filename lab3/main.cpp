@@ -12,11 +12,11 @@ int timer, tin[n], fup[n];
 bool used[n];
 int mx[n][n];
 
-void dfs(const int start, const int stop, const int v, const int p = -1) {
+void dfs(const int v, const int p = -1) {
   used[v] = true;
   tin[v] = fup[v] = timer++;
 
-  for (int i = start; i < stop; ++i) {
+  for (int i = 0; i < n; ++i) {
     if (mx[v][i] == 1) {
       int to = i;
       if (to == p)
@@ -25,7 +25,7 @@ void dfs(const int start, const int stop, const int v, const int p = -1) {
       if (used[to])
         fup[v] = std::min(fup[v], tin[to]);
       else {
-        dfs(start, stop, to, v);
+        dfs(to, v);
         fup[v] = std::min(fup[v], fup[to]);
 
         if (fup[to] > tin[v])
@@ -45,8 +45,6 @@ int main(int argc, char* argv[]) {
   MPI_Comm_size(MPI_COMM_WORLD, &procNum);
   MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
 
-  int* tops = new int[procNum + 1];
-
   if (procRank == 0) {
     char ch;
     std::ifstream file("out.txt");
@@ -63,29 +61,7 @@ int main(int argc, char* argv[]) {
         else
           mx[i][j] = 0;
     }
-    cout << "end read\n";
-
-    int l = 0;
-    for (int i = 0; i < procNum; i++)
-      tops[i] = 0;
-
-    if (procNum > 1) {
-      for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-          if (mx[i][j] == 1 && mx[j][i] == 1 && l < procNum) {
-            tops[l++] = i;
-            tops[l++] = j;
-          }
-    }
-
-    tops[(procNum + 1) - 1] = n;
-    for (int i = 0; i < procNum + 1; i++)
-      cout << tops[i] << " ";
-    cout << "\n";
   }
-
-  
-  MPI_Bcast(tops, procNum + 1, MPI_INT, 0, MPI_COMM_WORLD);
 
   MPI_Bcast(mx, n*n, MPI_INT, 0, MPI_COMM_WORLD);
 
@@ -97,13 +73,96 @@ int main(int argc, char* argv[]) {
 
   MPI_Barrier(MPI_COMM_WORLD);
 
-  for (int i = tops[procRank]; i < tops[procRank + 1]; i++)
-    if (!used[i])
-      dfs(tops[procRank], tops[procRank + 1], i);
+  if (procNum == 1) {
+    for (int i = 0; i < n; i++)
+      if (!used[i])
+        dfs(i);
+  } else {
+    if (procRank == 0)
+      dfs(0);
 
-  cout << procRank << ": " << count << "\n";
+    MPI_Bcast(&used, n, MPI_INT, 0, MPI_COMM_WORLD);
 
-  MPI_Reduce(&count, &sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    if (procNum == 2) {
+      if (procRank == 1)
+        for (int i = 0; i < n; i++)
+          if (!used[i])
+            dfs(i);
+    } else {
+      if (procRank == 1)
+        for (int i = 0; i < n; i++)
+          if (!used[i]) {
+            dfs(i);
+            break;
+          }
+      
+      MPI_Bcast(&used, n, MPI_INT, 1, MPI_COMM_WORLD);
+
+      if (procRank == 2) {
+        for (int i = 0; i < n; i++)
+          if (!used[i]) {         
+            dfs(i);
+            break;
+          }
+      }
+      
+      MPI_Bcast(&used, n, MPI_INT, 2, MPI_COMM_WORLD);
+
+      if (procNum == 4) {
+        if (procRank == 3)
+          for (int i = 0; i < n; i++)
+            if (!used[i]) {
+              dfs(i);
+            }
+      } else {
+        if (procRank == 3)
+          for (int i = 0; i < n; i++)
+            if (!used[i]) {
+              dfs(i);
+              break;
+            }
+
+        MPI_Bcast(&used, n, MPI_INT, 3, MPI_COMM_WORLD);
+
+        if (procRank == 4)
+          for (int i = 0; i < n; i++)
+            if (!used[i]) {
+              dfs(i);
+              break;
+            }
+
+        MPI_Bcast(&used, n, MPI_INT, 4, MPI_COMM_WORLD);
+
+        if (procRank == 5)
+          for (int i = 0; i < n; i++)
+            if (!used[i]) {
+              dfs(i);
+              break;
+            }
+
+        MPI_Bcast(&used, n, MPI_INT, 5, MPI_COMM_WORLD);
+
+        if (procRank == 6)
+          for (int i = 0; i < n; i++)
+            if (!used[i]) {
+              dfs(i);
+              break;
+            }
+
+        MPI_Bcast(&used, n, MPI_INT, 6, MPI_COMM_WORLD);
+
+        if (procRank == 7)
+          for (int i = 0; i < n; i++)
+            if (!used[i]) {
+              dfs(i);
+            }
+      }
+    }
+  }
+
+  //cout << procRank << ": " << count << "\n";
+
+  //MPI_Reduce(&count, &sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
   if (procRank == 0) {
     stop = MPI_Wtime();
