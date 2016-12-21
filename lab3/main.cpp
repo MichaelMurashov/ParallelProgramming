@@ -1,16 +1,24 @@
 ﻿#include <mpi.h>
 #include <iostream>
 #include <algorithm>
-#include <time.h>
 #include <fstream>
 
 using std::cout;
 
-int const n = 5000;
+int const n = 8 /*5000*/;
 int count = 0;
 int timer, tin[n], fup[n];
 bool used[n];
-int mx[n][n];
+int mx[n][n] = {
+  {0,1,1,0,0,0,0,0},
+  {1,0,0,1,0,0,0,0},
+  {1,0,0,0,0,1,1,0},
+  {0,1,0,0,1,0,0,0},
+  {0,0,0,1,0,0,0,0},
+  {0,0,1,0,0,0,0,1},
+  {0,0,1,0,0,0,0,0},
+  {0,0,0,0,0,1,0,0},
+};
 
 void dfs(const int v, const int p = -1) {
   used[v] = true;
@@ -36,7 +44,6 @@ void dfs(const int v, const int p = -1) {
 }
 
 int main(int argc, char* argv[]) {
-  srand(time(0));
   int procRank, procNum, sum = 0;
   double start, stop;
   timer = 0;
@@ -45,7 +52,7 @@ int main(int argc, char* argv[]) {
   MPI_Comm_size(MPI_COMM_WORLD, &procNum);
   MPI_Comm_rank(MPI_COMM_WORLD, &procRank);
 
-  if (procRank == 0) {
+  /*if (procRank == 0) {
     char ch;
     std::ifstream file("out.txt");
     if (!file.is_open()) {
@@ -63,7 +70,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  MPI_Bcast(mx, n*n, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(mx, n*n, MPI_INT, 0, MPI_COMM_WORLD);*/
 
   for (int i = 0; i < n; i++)
     used[i] = false;
@@ -162,11 +169,12 @@ int main(int argc, char* argv[]) {
 
   //cout << procRank << ": " << count << "\n";
 
-  //MPI_Reduce(&count, &sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+  MPI_Reduce(&count, &sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
 
   if (procRank == 0) {
     stop = MPI_Wtime();
-    cout << "time - " << stop - start << "\n";
+    cout << "sum = " << sum << "\n" 
+      << "time - " << stop - start << "\n";
   }
 
   MPI_Finalize();
