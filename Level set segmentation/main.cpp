@@ -1,14 +1,18 @@
 #include <iostream>
 
-#include "src/level.cpp"
+#include "mouse.h"
 
-using std::cout;
-using std::endl;
+using namespace std;
 
 int main(int argc, char** argv) {
-    Mat img = imread("img.jpg");
+    Mat src = imread("img.jpg");
+    const string windowName = "Source image";
 
-    imshow("circle", img);
+    Rect roi = Mouse::drawRect(src, windowName);
+
+
+    
+
 
     waitKey(0);
     return  0;
