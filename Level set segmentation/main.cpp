@@ -10,8 +10,8 @@ uint getIntensity(const Mat& img, int x, int y) {
 }
 
 int main(int argc, char** argv) {
-    Mat src = imread("img.jpg");
-    Rect roi = Mouse::drawRect(src, "Source image");
+    Mat src = imread("../images/ellipse.jpg");
+    Rect roi = Mouse::drawRect(src, "Select rectangle");
 
     Mat result = src.clone();
     uint threshold = getIntensity(src, roi.tl().x, roi.tl().y);
