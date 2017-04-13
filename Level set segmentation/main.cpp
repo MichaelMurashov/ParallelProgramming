@@ -10,7 +10,7 @@ uint getIntensity(const Mat& img, int x, int y) {
 }
 
 int main(int argc, char** argv) {
-    Mat src = imread("../images/ellipse.jpg");
+    Mat src = imread("../images/circle.jpg");
     Rect roi = Mouse::drawRect(src, "Select rectangle");
 
     Mat result = src.clone();
