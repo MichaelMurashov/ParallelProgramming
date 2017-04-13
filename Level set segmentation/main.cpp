@@ -10,7 +10,7 @@ uint getIntensity(const Mat& img, int x, int y) {
 }
 
 int main(int argc, char** argv) {
-    Mat src = imread("../images/ellipse.jpg");
+    Mat src = imread("../images/square.jpg");
     Rect roi = Mouse::drawRect(src, "Select rectangle");
 
     Mat result = src.clone();
@@ -28,15 +28,15 @@ int main(int argc, char** argv) {
         for (int j = startY; j < endY; j++) {
             uint intensity = getIntensity(result, j, i);
 
-            ///* allocate background */
+            //// allocate background
 //            if ((threshold - range) < intensity || intensity < (threshold + range))
 //                result.at<Vec3b>(j, i) = Vec3b(0, 255, 0);
 
-            ///* allocate object */
+            //// allocate object
             if ((threshold - range) > intensity || intensity > (threshold + range))
                 result.at<Vec3b>(j, i) = Vec3b(0, 0, 255);
 
-            ///* allocate borders (ALMOST WORKS) */
+            //// allocate borders (ALMOST WORKS)
 //            if ((threshold - range) > intensity || intensity > (threshold + range)) {
 //                threshold = getIntensity(result, j, i);
 //                result.at<Vec3b>(j, i) = Vec3b(0, 0, 0);
