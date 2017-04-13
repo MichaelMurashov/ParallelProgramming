@@ -1,26 +1,32 @@
 lab_4
 ----
 
-**Task:** Сегментация изображений – Level set метод
+**Задача:** Сегментация изображений – Level set метод
 
-**Description of realization:** Пользователь выбирает область, в которой точно присутствует объект. Результатом
-программы будет изображение с выделенным объектом.
+**Описание реализации:** Пользователь выбирает область, в которой точно присутствует объект. Результатом программы 
+будет изображение с выделенным объектом.
 
-**Result time:**
+**Время:**
 
-| Изображение | Последовательно | OpenMP | TBB | MPI+OpenMP |
-|:———-------- |:—-------------—:|:------:|:---:|:——--------:|
-|Circle       | 0 | 0 | 0 | 0 |
-|Square       | 0.00932 | 0 | 0 | 0 |
-|Ellipse      | 0 | 0 | 0 | 0 |
+| Изображение | Последовательно | OpenMP | TBB | MPI+OpneMP |
+| ----------- |:---------------:|:------:|:---:|:----------:|
+| Circle      | 0.013016        |        |     |            |
+| Square      | 0.00932         |        |     |            |
+| Ellipse     | 0.029837        |        |     |            |
 
+**Изображения:**
 
-Item | Value | Quantity
-:——— |:——:| ——-:
-Computer | 1600 | 3
-Phone | 12 | 2
-Pipe | 1 | 1
+#### Circle 600x600
 
-**Result images:**
+![circle](images/circle.jpg "Source")
+![circle](images/circle%20result.jpg "Result")
 
-[image]()
+#### Square 444x444
+
+![square](images/square.jpg "Source")
+![square](images/square%20result.jpg "Result")
+
+#### Ellipse 1301x800
+
+![ellipse](images/ellipse.jpg "Source")
+![ellipse](images/ellipse%20result.jpg "Result")
