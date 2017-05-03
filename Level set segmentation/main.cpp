@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 
     uint threshold = getIntensity(src, 0, 0);
     uint range = 50;
-    
+
     const clock_t start = clock();
 
     for (int i = 0; i < result.rows; i++)
