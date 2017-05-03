@@ -3,12 +3,13 @@ project(level_set)
 
 set(CMAKE_CXX_STANDARD 11)
 
-include_directories("./include")
-
-set(LIBRARY "_level_set")
-add_subdirectory(src)
-
 set(SOURCE_FILES main.cpp)
 add_executable(level_set ${SOURCE_FILES})
 
-target_link_libraries(level_set ${LIBRARY})
+find_package(OpenCV REQUIRED)
+message(STATUS "OpenCV library status:")
+message(STATUS "    version: ${OpenCV_VERSION}")
+message(STATUS "    libraries: ${OpenCV_LIBS}")
+message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
+
+target_link_libraries(level_set ${OpenCV_LIBS})
