@@ -1,1 +1,0 @@
-CMakeLists.txt not found in /Users/michaelmurashov/Desktop/1Projects/ParallelProgramming/Tests
