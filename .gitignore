@@ -1,1 +1,4 @@
 .DS_Store
+
+Tests/.idea
+Tests/cmake—build-debug
