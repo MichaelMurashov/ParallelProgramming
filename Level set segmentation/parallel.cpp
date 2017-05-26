@@ -130,7 +130,7 @@ void mpi_openMP(int argc, char* argv[], const int NUM_OF_THREADS) {
 }
 
 int main(int argc, char* argv[]) {
-	int NUM_OF_THREADS = 6;
+	int NUM_OF_THREADS = 2;
 
 	//openMP(NUM_OF_THREADS);
 	//tbb_1(NUM_OF_THREADS);
